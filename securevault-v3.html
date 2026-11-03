@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#10111b">
+<title>SecureVault — Private by design</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0c13;--panel:#121522;--panel2:#191d2d;--text:#f5f6ff;--muted:#9ba2ba;--line:#292e43;--accent:#9b87ff;--accent2:#6d5dfc;--green:#42d6a4;--red:#ff6e83;--shadow:0 20px 60px #0005}
+[data-theme="light"]{color-scheme:light;--bg:#f5f6fb;--panel:#fff;--panel2:#f0f1fa;--text:#17192a;--muted:#68708a;--line:#e2e4ef;--accent:#6552e8;--accent2:#5542d7;--green:#078b65;--red:#d6425b;--shadow:0 18px 50px #28305a12}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(900px 500px at 80% -10%,#6854dd25,transparent 65%),var(--bg);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+button,input,textarea{font:inherit}button{cursor:pointer}.wrap{max-width:1120px;margin:auto;padding:26px 24px 60px}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:52px}.brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:19px;letter-spacing:-.5px}.logo{height:40px;width:40px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(135deg,#a38dff,#6452ed);box-shadow:0 8px 25px #8067ff55}.logo svg{width:23px}.headright{display:flex;gap:10px;align-items:center}.pill{border:1px solid var(--line);border-radius:99px;padding:8px 12px;color:var(--muted);font-size:12px}
+.iconbtn{width:40px;height:40px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--text);font-size:17px}
+.hero{text-align:center;max-width:760px;margin:0 auto 34px}.eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid #8b78ff55;background:#8b78ff12;color:var(--accent);border-radius:99px;padding:7px 12px;font-size:12px;font-weight:700}.dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green)}
+h1{font-size:clamp(36px,6vw,62px);line-height:1.04;letter-spacing:-2.7px;margin:18px 0 14px}h1 span{background:linear-gradient(90deg,#b5a5ff,#7a8cff);background-clip:text;color:transparent}.sub{color:var(--muted);font-size:16px;max-width:590px;margin:auto}
+.tabs{display:flex;justify-content:center;gap:8px;margin:30px 0 18px;flex-wrap:wrap}.tab{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:11px 18px;color:var(--muted);font-weight:650}.tab.active{background:linear-gradient(135deg,#8c78ff,#6554e8);border-color:transparent;color:white;box-shadow:0 8px 22px #7661ff35}
+.card{max-width:850px;margin:auto;background:var(--panel);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);overflow:hidden}.cardtop{padding:23px 26px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:15px;align-items:center}.cardtop h2{font-size:18px;margin:0 0 3px}.hint{color:var(--muted);font-size:13px}.securetag{color:var(--green);font-size:12px;font-weight:700;white-space:nowrap}.content{padding:24px 26px 26px}
+.fieldlabel{font-size:13px;font-weight:700;margin:0 0 9px;display:block}.input,textarea{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:13px 14px;color:var(--text);outline:none;transition:.2s}.input:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px #8b78ff20}textarea{min-height:145px;resize:vertical}.row{display:flex;gap:12px}.row>*{flex:1;min-width:0}.spacer{height:18px}
+.drop{border:1.5px dashed #8d80c866;border-radius:16px;padding:30px 18px;text-align:center;background:var(--panel2);transition:.2s}.drop.drag{border-color:var(--accent);background:#8b78ff15}.dropicon{font-size:30px;margin-bottom:8px}.drop strong{display:block}.drop p{color:var(--muted);font-size:13px;margin:5px 0 14px}.filepick{display:inline-block;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:9px 14px;font-size:13px;font-weight:650;cursor:pointer}.filepick input{display:none}.fileinfo{margin-top:12px;color:var(--green);font-size:13px;word-break:break-all}
+.file-preview{display:flex;align-items:center;gap:13px;margin-top:14px;padding:13px;background:var(--panel);border:1px solid var(--line);border-radius:14px;animation:fileIn .38s cubic-bezier(.2,.8,.2,1) both;box-shadow:0 8px 24px #00000012}
+.file-preview.hidden{display:none!important}
+@keyframes fileIn{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+.file-icon{width:48px;height:48px;flex:0 0 48px;border-radius:13px;background:linear-gradient(145deg,#9b87ff25,#6d5dfc18);display:grid;place-items:center;font-size:24px}
+.file-meta{min-width:0;flex:1}.file-name{font-weight:750;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.file-details{font-size:11px;color:var(--muted);margin-top:3px}
+.remove-file{border:1px solid var(--line);background:var(--panel2);color:var(--muted);border-radius:9px;width:32px;height:32px;font-size:17px}
+.progress-track{height:3px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:9px}
+.progress-track span{display:block;width:38%;height:100%;background:linear-gradient(90deg,var(--accent),#6ee7d0);border-radius:99px;animation:progressMove 1.15s ease-in-out infinite}
+@keyframes progressMove{0%{transform:translateX(-110%)}100%{transform:translateX(300%)}}
+.password-help{font-size:11px;color:var(--muted);margin-top:7px}
+.decrypt-preview{display:flex;align-items:center;gap:13px;margin-top:14px;padding:13px;background:var(--panel);border:1px solid var(--line);border-radius:14px;animation:fileIn .38s cubic-bezier(.2,.8,.2,1) both;box-shadow:0 8px 24px #00000012}
+.decrypt-preview.hidden{display:none!important}
+.decrypt-drop.drag{border-color:var(--accent);background:#8b78ff15}
+.mini-status{font-size:11px;color:var(--muted);margin-top:4px}
+.password-wrap{position:relative}
+.password-wrap .input{padding-right:58px}
+.reveal{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;background:transparent;color:var(--muted);font-size:11px;font-weight:700;padding:8px}
+.file-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.primary,.secondary{border:0;border-radius:12px;padding:12px 17px;font-weight:750}.primary{background:linear-gradient(135deg,#9b87ff,#6855ed);color:#fff;box-shadow:0 8px 22px #7562f344}.primary:disabled{opacity:.45;cursor:not-allowed}.secondary{background:var(--panel2);border:1px solid var(--line);color:var(--text)}
+.result{margin-top:18px;border:1px solid var(--line);border-radius:14px;padding:15px;background:var(--panel2);display:none}.result.show{display:block}.resulthead{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:8px}.resulthead strong{font-size:13px}.result textarea{min-height:100px;font-size:12px;word-break:break-all}.success{color:var(--green)}.error{color:var(--red)}
+.note{display:flex;gap:12px;align-items:flex-start;margin:22px auto 0;max-width:850px;color:var(--muted);font-size:12px}.note b{color:var(--text)}.noteicon{font-size:17px}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;max-width:850px;margin:24px auto 0}.feature{border:1px solid var(--line);border-radius:15px;background:var(--panel);padding:16px}.feature .ico{font-size:20px}.feature b{display:block;font-size:13px;margin:7px 0 3px}.feature p{margin:0;color:var(--muted);font-size:12px}
+footer{text-align:center;color:var(--muted);font-size:11px;margin-top:36px}
+.hidden{display:none!important}.strength{font-size:11px;color:var(--muted);margin-top:7px}
+@media(max-width:650px){.wrap{padding:18px 14px 40px}header{margin-bottom:38px}.hero{margin-bottom:24px}h1{letter-spacing:-1.5px}.content{padding:19px}.cardtop{padding:19px}.row{flex-direction:column}.features{grid-template-columns:1fr}.pill{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="brand"><div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 1 1 8 0v3M12 14v3"/></svg></div>SecureVault</div>
+  <div class="headright"><span class="pill">LOCAL ENCRYPTION · NO ACCOUNT</span><button class="iconbtn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme">☼</button></div>
+</header>
+<section class="hero">
+  <div class="eyebrow"><span class="dot"></span> PRIVATE BY DESIGN</div>
+  <h1>Your data. <span>Your keys.</span><br>Your privacy.</h1>
+  <p class="sub">Encrypt messages and files right in your browser. Your password never leaves this device, and SecureVault never sees your plaintext.</p>
+</section>
+<nav class="tabs" aria-label="Tools">
+  <button class="tab active" data-tab="file">▧ &nbsp;File vault</button>
+  <button class="tab" data-tab="text">✉ &nbsp;Text encryption</button>
+  <button class="tab" data-tab="decrypt">⌑ &nbsp;Decrypt</button>
+</nav>
+<main class="card">
+  <div class="cardtop"><div><h2 id="panelTitle">Encrypt a file</h2><div class="hint" id="panelHint">Turn any file into a password-protected .svault package.</div></div><div class="securetag">● AES-256-GCM</div></div>
+  <div class="content">
+    <section id="filePanel">
+      <label class="fieldlabel">Choose a file to protect</label>
+      <div class="drop" id="drop">
+        <div class="dropicon">📁</div><strong>Drop your file here</strong><p>PDF, images, documents, archives — any file type</p>
+        <label class="filepick">Browse files<input type="file" id="fileInput"></label>
+        </div>
+      <div class="file-preview hidden" id="filePreview">
+        <div class="file-icon" id="fileIcon">📄</div>
+        <div class="file-meta"><div class="file-name" id="fileName"></div><div class="file-details" id="fileDetails"></div><div class="progress-track hidden" id="fileProgress"><span></span></div></div>
+        <button class="remove-file" id="removeFile" title="Remove selected file" aria-label="Remove selected file">×</button>
+      </div>
+      <div class="spacer"></div>
+      <label class="fieldlabel" for="filePassword">Encryption password</label>
+      <div class="password-wrap"><input class="input" id="filePassword" type="password" autocomplete="new-password" placeholder="Choose any password"><button class="reveal" data-reveal="filePassword" type="button">Show</button></div>
+      <div class="password-help">Choose any password you like. Longer and less predictable passwords are safer.</div>
+      <div class="actions"><button class="primary" id="encryptFile" disabled>Encrypt &amp; download package ↗</button><button class="secondary" id="genFilePass">Generate password</button></div>
+      <div class="result" id="fileResult" role="status"></div>
+    </section>
+    <section id="textPanel" class="hidden">
+      <label class="fieldlabel" for="plainText">Message to encrypt</label>
+      <textarea id="plainText" placeholder="Write a private message..."></textarea>
+      <div class="spacer"></div><label class="fieldlabel" for="textPassword">Encryption password</label>
+      <div class="password-wrap"><input class="input" id="textPassword" type="password" autocomplete="new-password" placeholder="Choose any password"><button class="reveal" data-reveal="textPassword" type="button">Show</button></div>
+      <div class="actions"><button class="primary" id="encryptText">Encrypt message</button><button class="secondary" id="genTextPass">Generate password</button></div>
+      <div class="result" id="textResult" role="status"></div>
+    </section>
+    <section id="decryptPanel" class="hidden">
+      <label class="fieldlabel">Select a SecureVault package</label>
+      <div class="drop" id="decryptDrop"><div class="dropicon">🔐</div><strong>Choose a .svault file</strong><p>Drop a package here or browse your device. Encrypted files stay on this device.</p><label class="filepick">Browse package<input type="file" id="packageInput" accept=".svault,application/octet-stream"></label></div>
+      <div class="decrypt-preview hidden" id="packagePreview">
+        <div class="file-icon" id="packageIcon">🔐</div>
+        <div class="file-meta"><div class="file-name" id="packageName"></div><div class="file-details" id="packageDetails"></div><div class="progress-track hidden" id="decryptProgress"><span></span></div></div>
+        <button class="remove-file" id="removePackage" title="Remove package" aria-label="Remove package">×</button>
+      </div>
+      <div class="spacer"></div><label class="fieldlabel" for="decryptPassword">Decryption password</label>
+      <div class="password-wrap"><input class="input" id="decryptPassword" type="password" autocomplete="current-password" placeholder="Enter the password used to encrypt"><button class="reveal" data-reveal="decryptPassword" type="button">Show</button></div>
+      <div class="actions"><button class="primary" id="decryptFile" disabled>Decrypt &amp; download ↗</button></div>
+      <div class="result" id="decryptResult" role="status"></div>
+      <div class="spacer"></div><label class="fieldlabel" for="cipherText">Or decrypt an encrypted text message</label>
+      <textarea id="cipherText" placeholder="Paste the complete SecureVault encrypted text package..."></textarea>
+      <div class="spacer"></div><label class="fieldlabel" for="textDecryptPassword">Message password</label>
+      <div class="password-wrap"><input class="input" id="textDecryptPassword" type="password" autocomplete="current-password" placeholder="Enter the message password"><button class="reveal" data-reveal="textDecryptPassword" type="button">Show</button></div>
+      <div class="actions"><button class="secondary" id="decryptText">Decrypt message</button></div>
+      <div class="result" id="textDecryptResult" role="status"></div>
+    </section>
+  </div>
+</main>
+<div class="note"><span class="noteicon">🛡️</span><div><b>Know what this version does:</b> Encryption and decryption happen locally in your browser using the Web Crypto API. Share the downloaded <code>.svault</code> file through any channel, and send its password separately. This standalone HTML version does not host files or create online share links. Keep your password safe — there is no password reset or recovery backdoor.</div></div>
+<section class="features">
+  <div class="feature"><div class="ico">🔒</div><b>AES-256-GCM</b><p>Authenticated encryption helps detect tampering and incorrect passwords.</p></div>
+  <div class="feature"><div class="ico">⚡</div><b>Runs in your browser</b><p>No account, server upload or third-party processing required.</p></div>
+  <div class="feature"><div class="ico">📦</div><b>Portable packages</b><p>Send the encrypted .svault file; recipients decrypt it with the password.</p></div>
+</section>
+<footer>SECUREVAULT · CLIENT-SIDE ENCRYPTION · Built for privacy</footer>
+</div>
+<script>
+(() => {
+'use strict';
+const $ = id => document.getElementById(id);
+const enc = new TextEncoder(), dec = new TextDecoder();
+const MAGIC = new Uint8Array([83,86,76,84,49,0]); // SVLT1\\0
+const ITERATIONS = 600000;
+let selectedFile = null, selectedPackage = null;
+function b64(bytes){let s='';for(let i=0;i<bytes.length;i+=0x8000)s+=String.fromCharCode(...bytes.subarray(i,i+0x8000));return btoa(s)}
+function unb64(s){const raw=atob(s);const out=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)out[i]=raw.charCodeAt(i);return out}
+function concat(...arrays){const n=arrays.reduce((a,b)=>a+b.length,0),out=new Uint8Array(n);let p=0;for(const a of arrays){out.set(a,p);p+=a.length}return out}
+function show(el,html,kind=''){el.className='result show';el.innerHTML=html; if(kind)el.dataset.kind=kind}
+function safe(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function download(blob,name){const a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000)}
+function randomPassword(){const bytes=crypto.getRandomValues(new Uint8Array(24));return b64(bytes).replace(/[+/=]/g,'').slice(0,32)+'!'}
+async function derive(password,salt){const material=await crypto.subtle.importKey('raw',enc.encode(password),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:ITERATIONS,hash:'SHA-256'},material,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+async function encryptBytes(data,password){if(!password)throw Error('Enter a password to protect your data.');const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12)),key=await derive(password,salt);const cipher=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv,tagLength:128},key,data));return {salt,iv,cipher}}
+async function decryptBytes(salt,iv,cipher,password){if(!password)throw Error('Enter your decryption password.');const key=await derive(password,salt);return new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM',iv,tagLength:128},key,cipher))}
+function packageBytes(meta,result){const header=enc.encode(JSON.stringify({v:1,name:meta.name,type:meta.type,size:meta.size,iterations:ITERATIONS}));if(header.length>65535)throw Error('File metadata is too large.');const len=new Uint8Array([header.length>>8,header.length&255]);return concat(MAGIC,len,header,result.salt,result.iv,result.cipher)}
+function parsePackage(bytes){if(bytes.length<36||!MAGIC.every((v,i)=>bytes[i]===v))throw Error('This is not a valid SecureVault package.');const hlen=(bytes[6]<<8)|bytes[7];const start=8+hlen;if(bytes.length<start+28)throw Error('The package is incomplete or damaged.');const meta=JSON.parse(dec.decode(bytes.subarray(8,start)));if(meta.v!==1||!Number.isInteger(meta.iterations)||meta.iterations<100000||meta.iterations>2000000)throw Error('Unsupported or invalid package version.');return {meta,salt:bytes.slice(start,start+16),iv:bytes.slice(start+16,start+28),cipher:bytes.slice(start+28)}}
+function resultError(el,e){show(el,'<span class="error">⚠ '+safe(e.message||'Something went wrong.')+'</span>')}
+function setBusy(btn,busy,label){btn.disabled=busy;if(busy){btn.dataset.old=btn.textContent;btn.textContent=label||'Working…'}else{btn.textContent=btn.dataset.old||btn.textContent}}
+function switchTab(tab){document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));['file','text','decrypt'].forEach(t=>$(t+'Panel').classList.toggle('hidden',t!==tab));const titles={file:['Encrypt a file','Turn any file into a password-protected .svault package.'],text:['Encrypt a message','Create an encrypted message package you can safely copy and share.'],decrypt:['Decrypt your data','Open a .svault file or decrypt a SecureVault text package.']};$('panelTitle').textContent=titles[tab][0];$('panelHint').textContent=titles[tab][1]}
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+document.querySelectorAll('[data-reveal]').forEach(btn=>btn.addEventListener('click',()=>{const input=$(btn.dataset.reveal);const visible=input.type==='password';input.type=visible?'text':'password';btn.textContent=visible?'Hide':'Show'}));
+
+$('themeBtn').addEventListener('click',()=>{const next=document.documentElement.dataset.theme==='light'?'dark':'light';document.documentElement.dataset.theme=next;try{localStorage.setItem('sv-theme',next)}catch{}});
+try{const t=localStorage.getItem('sv-theme');if(t)document.documentElement.dataset.theme=t}catch{}
+function fileEmoji(file){const ext=(file.name.split('.').pop()||'').toLowerCase();if(file.type.startsWith('image/'))return '🖼️';if(file.type==='application/pdf'||ext==='pdf')return '📕';if(file.type.startsWith('video/'))return '🎬';if(file.type.startsWith('audio/'))return '🎵';if(['zip','rar','7z','tar','gz'].includes(ext))return '🗜️';if(['doc','docx','txt','rtf'].includes(ext))return '📝';if(['xls','xlsx','csv'].includes(ext))return '📊';if(['ppt','pptx'].includes(ext))return '📽️';return '📄'}
+function attachFile(file){selectedFile=file;$('fileIcon').textContent=fileEmoji(file);$('fileName').textContent=file.name;$('fileDetails').textContent=`${(file.size/1024/1024).toFixed(2)} MB · ${file.type||'Unknown file type'}`;$('filePreview').classList.remove('hidden');$('filePreview').style.animation='none';void $('filePreview').offsetWidth;$('filePreview').style.animation='';$('encryptFile').disabled=false;$('fileResult').classList.remove('show')}
+$('removeFile').addEventListener('click',()=>{selectedFile=null;$('fileInput').value='';$('filePreview').classList.add('hidden');$('encryptFile').disabled=true;$('fileProgress').classList.add('hidden')});
+$('fileInput').addEventListener('change',e=>{if(e.target.files[0])attachFile(e.target.files[0])});
+const drop=$('drop');['dragenter','dragover'].forEach(n=>drop.addEventListener(n,e=>{e.preventDefault();drop.classList.add('drag')}));['dragleave','drop'].forEach(n=>drop.addEventListener(n,e=>{e.preventDefault();drop.classList.remove('drag')}));drop.addEventListener('drop',e=>{const f=e.dataTransfer.files[0];if(f)attachFile(f)});
+$('genFilePass').onclick=()=>$('filePassword').value=randomPassword();
+$('encryptFile').onclick=async()=>{const btn=$('encryptFile');setBusy(btn,true,'Encrypting…');try{if(!selectedFile)throw Error('Choose a file first.');const password=$('filePassword').value;$('fileProgress').classList.remove('hidden');const data=new Uint8Array(await selectedFile.arrayBuffer());const result=await encryptBytes(data,password);$('fileProgress').classList.add('hidden');const packed=packageBytes({name:selectedFile.name,type:selectedFile.type||'application/octet-stream',size:selectedFile.size},result);const safeName=selectedFile.name.replace(/[^a-zA-Z0-9._-]/g,'_').replace(/\.[^.]+$/,'')||'file';download(new Blob([packed],{type:'application/octet-stream'}),safeName+'.svault');show($('fileResult'),'<span class="success">✓ File encrypted successfully.</span><br><small>Downloaded '+safe(selectedFile.name)+'.svault · '+(packed.length/1024/1024).toFixed(2)+' MB encrypted package.</small><br><small>Share the package and send its password through a different channel.</small>')}catch(e){$('fileProgress').classList.add('hidden');resultError($('fileResult'),e)}finally{setBusy(btn,false)}};
+function attachPackage(file){if(!file)return;selectedPackage=file;$('packageIcon').textContent='🔐';$('packageName').textContent=file.name;$('packageDetails').textContent=`${(file.size/1024/1024).toFixed(2)} MB · Encrypted SecureVault package`;$('packagePreview').classList.remove('hidden');$('packagePreview').style.animation='none';void $('packagePreview').offsetWidth;$('packagePreview').style.animation='';$('decryptFile').disabled=false;$('decryptResult').classList.remove('show')}
+$('packageInput').addEventListener('change',e=>attachPackage(e.target.files[0]));
+$('removePackage').addEventListener('click',()=>{selectedPackage=null;$('packageInput').value='';$('packagePreview').classList.add('hidden');$('decryptFile').disabled=true;$('decryptProgress').classList.add('hidden')});
+const decryptDrop=$('decryptDrop');['dragenter','dragover'].forEach(n=>decryptDrop.addEventListener(n,e=>{e.preventDefault();decryptDrop.classList.add('drag')}));['dragleave','drop'].forEach(n=>decryptDrop.addEventListener(n,e=>{e.preventDefault();decryptDrop.classList.remove('drag')}));decryptDrop.addEventListener('drop',e=>{const f=e.dataTransfer.files[0];if(f)attachPackage(f)});
+$('decryptFile').onclick=async()=>{const btn=$('decryptFile');setBusy(btn,true,'Decrypting…');try{if(!selectedPackage)throw Error('Choose a .svault package first.');$('decryptProgress').classList.remove('hidden');const parsed=parsePackage(new Uint8Array(await selectedPackage.arrayBuffer()));const plain=await decryptBytes(parsed.salt,parsed.iv,parsed.cipher,$('decryptPassword').value);$('decryptProgress').classList.add('hidden');download(new Blob([plain],{type:parsed.meta.type||'application/octet-stream'}),parsed.meta.name||'decrypted-file');show($('decryptResult'),'<span class="success">✓ Decryption successful.</span><br><small>Restored '+safe(parsed.meta.name||'file')+' · '+(plain.length/1024/1024).toFixed(2)+' MB.</small>')}catch(e){$('decryptProgress').classList.add('hidden');resultError($('decryptResult'),e)}finally{setBusy(btn,false)}};
+$('genTextPass').onclick=()=>$('textPassword').value=randomPassword();
+$('encryptText').onclick=async()=>{const btn=$('encryptText');setBusy(btn,true,'Encrypting…');try{const message=$('plainText').value;if(!message.trim())throw Error('Enter a message to encrypt.');const r=await encryptBytes(enc.encode(message),$('textPassword').value);const payload={format:'SecureVaultText',v:1,iterations:ITERATIONS,salt:b64(r.salt),iv:b64(r.iv),ciphertext:b64(r.cipher)};const output=JSON.stringify(payload);show($('textResult'),'<div class="resulthead"><strong class="success">✓ Message encrypted</strong><button class="secondary" id="copyCipher">Copy package</button></div><textarea readonly id="cipherOutput"></textarea><small>Send this encrypted package and its password separately.</small>');$('cipherOutput').value=output;$('copyCipher').onclick=async()=>{await navigator.clipboard.writeText(output);$('copyCipher').textContent='Copied ✓'}}catch(e){resultError($('textResult'),e)}finally{setBusy(btn,false)}};
+$('decryptText').onclick=async()=>{const btn=$('decryptText');setBusy(btn,true,'Decrypting…');try{const p=JSON.parse($('cipherText').value);if(p.format!=='SecureVaultText'||p.v!==1||p.iterations!==ITERATIONS)throw Error('Invalid or unsupported SecureVault text package.');const plain=await decryptBytes(unb64(p.salt),unb64(p.iv),unb64(p.ciphertext),$('textDecryptPassword').value);const message=dec.decode(plain);show($('textDecryptResult'),'<div class="resulthead"><strong class="success">✓ Message decrypted</strong><button class="secondary" id="copyPlain">Copy text</button></div><textarea readonly id="plainOutput"></textarea>');$('plainOutput').value=message;$('copyPlain').onclick=async()=>{await navigator.clipboard.writeText(message);$('copyPlain').textContent='Copied ✓'}}catch(e){resultError($('textDecryptResult'),e)}finally{setBusy(btn,false)}};
+})();
+</script>
+</body>
+</html>
